@@ -1,6 +1,7 @@
 `batch.spline` <-
 function	(dir,
 							format="FE", #c("NIM")
+							raw = TRUE, 
 							robust=TRUE, 
 							offset =5,
 							knots = 1000,
@@ -32,10 +33,10 @@ function	(dir,
 	pin <- index[x]
 	file <- paste(dir, names[pin], sep="")
 	
-	if (format == "FE") { print("Using fe.read (Agilent feture extraction files)"); print(paste("Reading ", file, "....", sep="")); data <- fe.read(file); } 
-	if (format == "NIM") { print("Using nim.read (Nimblegen seg_MNT.txt files)"); print(paste("Reading ", file, "....", sep="")); data <- nim.read(file); }
+	if (format == "FE") { print("Using fe.read (Agilent feture extraction files)"); print(paste("Reading ", file, "....", sep="")); data <- fe.read(file, Raw=raw); } 
+	if (format == "NIM") { print("Using nim.read (Nimblegen seg_MNT.txt files)"); print(paste("Reading ", file, "....", sep="")); data <- nim.read(file, Raw=raw); }
 	
-	final <- Jspline(data, offset, knots, ntyp, p, fact, robust, segN, sn, index1=1, index2=2)	
+	final <- Jspline(data, offset, knots, ntyp, p, fact, robust, segN, sn)	
     justname = substr(file, 0, nchar(file) -4)
     tname = paste(justname, "_processed.temp", sep="")
 	pname = paste(justname, ".pdf", sep="")

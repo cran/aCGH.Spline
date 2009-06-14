@@ -15,9 +15,7 @@ f.Noise(r1, fact = 4.5, p = 0.68, typ = "percentile")
   \item{p}{		- value from 0 to 1, the percentile to evaluate. }
   \item{typ}{	- noise estimation type c("percentile", "difference", "combined"). }
 }
-\details{
 
-}
 \value{
 An estimation of noise.
 }

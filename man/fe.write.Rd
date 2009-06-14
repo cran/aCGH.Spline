@@ -17,8 +17,9 @@ fe.write(file, x)
   Using a combination of "fe.read" and "fe.write" it is easy to modifying FE data and output results back to the orignal format.  
 }
 \value{
-This outputs a new FE file having exactly the same name as the input FE file except it will start with "SS" instead of "US".\cr\cr
-The new FE file will contain the intensity values, log ratio (calculated from the intensity values) and flags from the ".temp" format input stucture(x).\cr 
+This outputs a new FE file having exactly the same name as the input FE file except its filename will start with "S".\cr\cr
+The new FE file will contain the intensity values, log ratio and flags from the ".temp" format input stucture(x).\cr
+NB. If the input FE filename starts with an "S" the file will be overwritten.\cr
 }
 \author{ Tomas William Fitzgerald }
 \note{ 
@@ -28,7 +29,7 @@ This function draws on methods contained within the "Jspline" class.
 
 # Read "FEfile.txt", flag all data points and write out in FE format.
 # data <- fe.read("FEfile.txt", raw=TRUE)
-# data[,7] = 1
+# data[,8] = 1
 # fe.write("FEfile.txt", data)
 }
 

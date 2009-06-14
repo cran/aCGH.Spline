@@ -1,12 +1,13 @@
 `Jspline` <-
-function(x, offset=5, knots=1000, ntyp="percentile", p=0.68, fact=4.5, robust=TRUE, segN=FALSE, sn=0.75, index1=1, index2=2) {
+function(x, offset=5, knots=1000, ntyp="percentile", p=0.68, fact=4.5, robust=TRUE, segN=FALSE, sn=0.75) {
 	
 	# Set java class path and heap size
 	SetJ()
+	gc(reset=TRUE)
 	
 	# Make sure no negative values
-	x[x[,1]<1,1] = 1
 	x[x[,2]<1,2] = 1
+	x[x[,3]<1,3] = 1
 	
 	if (offset < 1) {
 	print("Offset cannot be less than one - settings offset to one!")
@@ -16,17 +17,18 @@ function(x, offset=5, knots=1000, ntyp="percentile", p=0.68, fact=4.5, robust=TR
 	print("Calculating noise...")
 	
 	cleandata <- na.omit(x)
-	r1 = log2(cleandata[,1] / cleandata[,2])
-	r2 = r1[order(cleandata[,3], cleandata[,4])]
+	r1 = log2(cleandata[,2] / cleandata[,3])
+	r1 = r1[order(cleandata[,4], cleandata[,5])]
 	t = 0;
 
 	if (segN == TRUE) {
-		r3 = segN(r2, sn)
-		t = f.Noise(r3, fact, p, ntyp)
+		r2 = r1 - segN(r1)
+		t = f.Noise(r2, fact, p, ntyp)
+		rm(r2)
 	}
 	
 	if (segN == FALSE) {
-	t = f.Noise(r2, fact, p, ntyp)
+		t = f.Noise(r1, fact, p, ntyp)
 	}
 	
 	print("Performing Spline fitting and interpolation...")
@@ -35,25 +37,31 @@ function(x, offset=5, knots=1000, ntyp="percentile", p=0.68, fact=4.5, robust=TR
 	.jcall("Jspline", "[D", "SetValues", spVals)
 
 	if (robust==FALSE) {
-	ra <- cleandata[,c(index1, index2)]
-	Qiindex <- cleandata[,-c(index1, index2)]
+	ra <- cleandata[,c(2, 3)]
+	Qiindex <- cleandata[,-c(1, 2, 3)]
 	arg <- 0
+	rm(cleandata, r1)
+	gc(reset=TRUE)
 	}
 	
 	if (robust==TRUE) {
 	r1 = abs(r1 - median(r1, na.rm=TRUE))
-	rxy <- cleandata[r1>t,c(index1, index2)]
-	ra <- cleandata[r1<t,c(index1, index2)]
-	Qind = cleandata[,-c(index1, index2)]
+	rxy <- cleandata[r1>t,c(2, 3)]
+	ra <- cleandata[r1<t,c(2, 3)]
+	Qind = cleandata[,-c(1, 2, 3)]
 	Qiindex <- rbind(Qind[r1<t,], Qind[r1>t,])				 	 		
 	arg <- length(rxy[,1])	
 	fxy <- rxy
+	rm(cleandata, r1, Qind)
+	gc(reset=TRUE)
 	}
-	
+
 	# run Jspline - Jspline.java
 	fitR = .jcall("Jspline","[D", "RunSpline",ra[,1],ra[,2])
 	fitG = .jcall("Jspline","[D", "RunSpline",ra[,2],ra[,1])
 	fit = cbind(fitR, fitG)
+	rm(fitR, fitG)
+	gc(reset=TRUE)
 	
 	if (arg > 0) {	
 	print(paste("Threshold = ", t))
@@ -66,12 +74,17 @@ function(x, offset=5, knots=1000, ntyp="percentile", p=0.68, fact=4.5, robust=TR
 	fxx1 = c(fit[,1], fxy[,1])
 	fxx2 = c(fit[,2], fxy[,2])
 	fxx = cbind(fxx1, fxx2)
-	tt = cbind(fxx, Qiindex)	
+	tt = cbind(fxx, Qiindex)
+	rm(ra, rxy, fxx1, fxx2, fxx, fxy)
+	gc(reset=TRUE)
 	}
-	
+
 	if (arg < 1) {		
-	tt = cbind(fit, Qiindex)	
+	tt = cbind(fit, Qiindex)
+	rm(ra, fit, Qiindex)
+	gc(reset=TRUE)
 	}
+
 	
 	# exclude the top and bottom 0.001 percentile (paired intensity values)
 	p = mean(quantile(tt[,1], probs=0.999, na.rm=TRUE), quantile(tt[,2], probs=0.999, na.rm=TRUE))
@@ -83,12 +96,15 @@ function(x, offset=5, knots=1000, ntyp="percentile", p=0.68, fact=4.5, robust=TR
 	tt[tt[,1] <pp & tt[,2]<pp,7] = 1
 
 	# Recombine data
-	colnames(tt) <- colnames(x)
 	newresult <- matrix(ncol=length(x[1,]), nrow=length(x[,1]))
 	colnames(newresult) <- colnames(x)
-	newresult <- rbind(tt, x[!complete.cases(x),]) 
-	#final <- newresult[order(newresult[,3], newresult[,4]),]
-	final <- newresult[order(newresult[,6]),]
+	tt = cbind(log2(tt[,1]/tt[,2]), tt)
+	newresult <- rbind(tt, x[!complete.cases(x),])
+	rm(tt)
+	newresult[,1] <- log2(newresult[,2]/newresult[,3])
+	final <- newresult[order(newresult[,7]),]
+	rm(newresult)
+	gc(reset=TRUE)
 
 return(final)
 }

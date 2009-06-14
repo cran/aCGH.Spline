@@ -7,7 +7,7 @@ Method to carry out robust spline fitting and interpolation.
 }
 \usage{
 Jspline(x, offset=5, knots=1000, ntyp="percentile", p=0.68, fact=4.5, 
-	robust=TRUE, segN=FALSE, sn=0.75, index1=1, index2=2)
+	robust=TRUE, segN=FALSE, sn=0.75)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -20,8 +20,6 @@ Jspline(x, offset=5, knots=1000, ntyp="percentile", p=0.68, fact=4.5,
   \item{robust}{	- make robust (exclude points from spline) TRUE or FALSE. }
   \item{segN}{		- use segmentation prior to noise estimation TRUE or FALSE (see segN). }
   \item{sn}{	- the segmentation threshold. }
-  \item{index1}{	- index within data stucture x where cy5 intensity values reside. }
-  \item{index2}{	- index within data stucture x where cy3 intensity values reside. }
 }
 \details{
 This method carries out natural cubic spline fitting and interpolation on aCGH dual color microarray data. 
@@ -45,17 +43,18 @@ dd = sin(2*pi/1000 * v)
 ndd = dd  +  rnorm(length(dd),0,120) + 1000
 
 ## Create ".temp" data stucture
-mat = matrix(ncol=7,nrow=length(dd))
-mat[,1] = nd
-mat[,2] = ndd
-mat[,3] = 0
+mat = matrix(ncol=8,nrow=length(dd))
+mat[,1] = log2(nd/ndd)
+mat[,2] = nd
+mat[,3] = ndd
 mat[,4] = 0
 mat[,5] = 0
 mat[,6] = 0
 mat[,7] = 0
+mat[,8] = 0
 
 ## Add a few flags
-mat[100:150,7] = 1
+mat[100:150,8] = 1
 
 ## Plot the data before and after Jspline
 par(mfrow=c(2,1),mar=c(1,1,1,1))

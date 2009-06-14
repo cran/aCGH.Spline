@@ -35,14 +35,15 @@ dd = sin(2*pi/1000 * v)
 ndd = dd  +  rnorm(length(dd),0,120) + 1000
  
 ## Create ".temp" data stucture
-mat = matrix(ncol=7,nrow=length(dd))
-mat[,1] = nd
-mat[,2] = ndd
-mat[,3] = 0
+mat = matrix(ncol=8,nrow=length(dd))
+mat[,1] = log2(nd/ndd)
+mat[,2] = nd
+mat[,3] = ndd
 mat[,4] = 0
 mat[,5] = 0
 mat[,6] = 0
 mat[,7] = 0
+mat[,8] = 0
 
 ## Add a few flags
 mat[100:150,7] = 1

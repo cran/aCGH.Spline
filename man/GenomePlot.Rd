@@ -33,14 +33,15 @@ for (x in 2:24) {
 }
 
 # Create a ".temp" data structure
-mat = matrix(ncol=7, nrow=length(chr))
-mat[,1] = rnorm(length(chr),1000,150)
-mat[,2] = rnorm(length(chr),800,180)
-mat[,3] = chr
-mat[,4] = seq(1,length(chr), 1)
+mat = matrix(ncol=8, nrow=length(chr))
+mat[,1] = log2(rnorm(length(chr),1000,150)/rnorm(length(chr),800,180))
+mat[,2] = rnorm(length(chr),1000,150)
+mat[,3] = rnorm(length(chr),800,180)
+mat[,4] = chr
 mat[,5] = seq(1,length(chr), 1)
-mat[,6] = 0
+mat[,6] = seq(1,length(chr), 1)
 mat[,7] = 0
+mat[,8] = 0
 
 # Plot the data
 GenomePlot(mat)

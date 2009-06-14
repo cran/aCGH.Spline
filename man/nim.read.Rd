@@ -6,17 +6,19 @@
  Function to read a Nimblgen "SEG_MNT.txt" file.
 }
 \usage{
-nim.read(file)
+nim.read(file, Raw)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{file}{		- Nimblegen "SEG_MNT.txt" file to read. }
+  \item{Raw}{		- to use raw data or not (TRUE or FALSE). }
 }
 \details{
 This function reads the contains of a Nimblegen "SEG_MNT.txt" file into a ".temp" formatted dataframe and flags low intensity probes.  
 }
 \value{
-The ".temp" dataframe contains seven columns:\cr\cr
+The ".temp" dataframe contains eight columns:\cr\cr
+- Log2 ratio values.\cr
 - Cy5 intensity values.\cr
 - Cy3 intensity values.\cr
 - Chromosome number.\cr

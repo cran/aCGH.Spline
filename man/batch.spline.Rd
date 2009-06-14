@@ -6,14 +6,15 @@
 Function for batch processing aCGH data though the "Jspline" method.
 }
 \usage{
-batch.spline(dir, format = "FE", robust = TRUE, offset=5, knots=1000,
+batch.spline(dir, format = "FE", raw=TRUE, robust = TRUE, offset=5, knots=1000,
 		ntyp = "percentile", p = 0.68, fact = 4.5, segN = FALSE, 
 		sn = 0.75, writeFE = FALSE, QC = FALSE, GFF = FALSE, PDF = FALSE)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{dir}{		- the directory to process. }
+  \item{dir}{		- the directory to process. }  
   \item{format}{		- the type of file format - c("FE", "NIM"). }
+  \item{raw}{		- to use raw data or not (TRUE or FALSE). }
   \item{robust}{		- make the method robust to outliers (TRUE or FALSE). }
   \item{offset}{		- parameters to set the number of time the knot point will be offset. }
   \item{knots}{		- the number of knot points to use for spline fitting. }

@@ -11,7 +11,7 @@ ind_list = vector(length=length(list))
 lines = scan(file, what="", skip=10, sep="\n")
 iLines = grep("chr", lines)
 nLines = lines[iLines]
-newLines =  strsplit(nLines, "\t", extended = TRUE, fixed = FALSE, perl = FALSE)
+newLines =  strsplit(nLines, "\t", fixed = FALSE, perl = FALSE)
 
 format = matrix(ncol=length(list), nrow=length(nLines))
  

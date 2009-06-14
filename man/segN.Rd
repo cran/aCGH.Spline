@@ -1,28 +1,27 @@
 \name{segN}
 \alias{segN}
 %- Also NEED an '\alias' for EACH other topic documented here.
-\title{ Segmentation method for noise calculation. }
+\title{ Segmentation method. }
 \description{
-Segmentation method for noise calculation.
+Java method that performs segmentation using a 'RandomWalk' algorithm.
 }
 \usage{
-segN(r, t)
+segN(ddd)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
-  \item{r}{		- vector of ratio values. }
-  \item{t}{		- value between 0 and 1 (a percentile). }
+  \item{ddd}{		- vector of ratio values (sorted by genomic postion). }
 }
 \details{
-This method assesses the difference between consecutive points and median normalises segments above the threshold (t).
+This method segments and assesses the difference between consecutive data points using a 'RandomWalk' approach.
 }
 \value{
-A ratio which represents the noise of the original ratio(r) as if it were more normal. 
+A vector of length (ddd) containing the segment medians. 
 }
 \author{ Tomas William Fitzgerald }
 \note{ 
-This method is useful when looking at highly aneuploid data (e.g. cancer samples). It can be used in an iterative manner if required.\cr
-It is important to make sure the data is sorted by genomic position before running this.
+This method is static and has no paramethers available for the user.\cr
+NB. The full method will be available as an R package soon.
 }
 \examples{
 
@@ -34,11 +33,13 @@ green = dd  +  rnorm(length(dd),0,120) + 1000
  rat = log2(red / green) - median(log2(red / green), na.rm=TRUE)
  rat[20000:30000] = abs(rat[20000:30000] * 2)
  rat[60000:70000] = -abs(rat[60000:70000] * 2)
- seg  = segN(rat,0.50)
+ seg  = segN(rat)
  par(mfrow=c(2,1))
  plot(rat, pch=46, ylim=c(-2,2), main="Before_segN")
- plot(seg, pch=46, ylim=c(-2,2), main="After_segN")
-
+ plot(rat, pch=46, ylim=c(-2,2), main="After_segN")
+ matplot(seg, pch=46, ylim=c(-2,2), col='red', add=TRUE)
+ legend("bottomright", bty = "n", pch=20, c("Original data values", "Segment medians"), col=c("black", "red"))
+ 
 }
 % Add one or more standard keywords, see file 'KEYWORDS' in the
 % R documentation directory.
