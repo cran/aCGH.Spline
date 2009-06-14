@@ -1,6 +1,7 @@
 `SetJ` <-
 function() { 
 library(rJava)
+.jinit()
 Jpath = system.file("java", package="aCGH.Spline")
 .jinit(classpath=Jpath, parameters="-Xmx1600m")
 #.jinit(classpath="/Users/tf2/Msc_Thesis/R_JPack/my/", parameters="-Xmx512m")

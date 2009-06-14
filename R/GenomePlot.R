@@ -1,5 +1,6 @@
 `GenomePlot` <-
 function(x, ylim=c(-3,3), axes=FALSE, pch=46, col="black") {
+	x <- x[order(x[,3], x[,4]),]
 	uni= unique(x[,3])
 	uni = uni[complete.cases(uni)]
 	si = ceiling(length(uni) / 4)

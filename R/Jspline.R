@@ -17,16 +17,16 @@ function(x, offset=5, knots=1000, ntyp="percentile", p=0.68, fact=4.5, robust=TR
 	
 	cleandata <- na.omit(x)
 	r1 = log2(cleandata[,1] / cleandata[,2])
+	r2 = r1[order(cleandata[,3], cleandata[,4])]
 	t = 0;
 
 	if (segN == TRUE) {
-		r2 = r1[order(cleandata[,3], cleandata[,4])]
 		r3 = segN(r2, sn)
 		t = f.Noise(r3, fact, p, ntyp)
 	}
 	
 	if (segN == FALSE) {
-	t = f.Noise(r1, fact, p, ntyp)
+	t = f.Noise(r2, fact, p, ntyp)
 	}
 	
 	print("Performing Spline fitting and interpolation...")
@@ -87,7 +87,8 @@ function(x, offset=5, knots=1000, ntyp="percentile", p=0.68, fact=4.5, robust=TR
 	newresult <- matrix(ncol=length(x[1,]), nrow=length(x[,1]))
 	colnames(newresult) <- colnames(x)
 	newresult <- rbind(tt, x[!complete.cases(x),]) 
-	final <- newresult[order(newresult[,3], newresult[,4]),]
+	#final <- newresult[order(newresult[,3], newresult[,4]),]
+	final <- newresult[order(newresult[,6]),]
 
 return(final)
 }
